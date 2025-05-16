@@ -2,7 +2,7 @@
 This is *Qonnect* a simple tabular game that is played according to the rules of quantum repeater networks.
 
 <div align="center">
-![Alt text](https://raw.githubusercontent.com/chrishalkias/qonnect/main/assets/preview.png)
+<img src="./assets/preview.png" alt="Description" width="300"/>
 </div>
 
 # Quick links
