@@ -8,7 +8,7 @@ The configuration and run file.
 
 from game import Qonnect
 
-n, tau, p_e, p_s = (5, 10, 1, 1)
+n, tau, p_e, p_s = (7, 30, 1, 1)
 game_config = {
     'grid_size': n,                      # grid
     'cell_size': 100,                    # Smaller cells
