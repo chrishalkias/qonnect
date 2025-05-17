@@ -63,5 +63,5 @@ add the known bugs
 ## Instalation
 
 ```
-git clone https://github.com/chrishalkias/QRN-RL-GNN/game
+git clone https://github.com/chrishalkias/qonnect/
 ```
