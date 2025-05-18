@@ -65,3 +65,9 @@ add the known bugs
 ```
 git clone https://github.com/chrishalkias/QRN-RL-GNN/game
 ```
+
+## How to play
+
+Run the `play.py` file and specify the following tuple accoring to the desired size `n` and operation probabilities `p_e`, `p_s` and dot lifetime `tau`
+
+    n, tau, p_e, p_s = (7, 30, 1, 1)
