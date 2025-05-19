@@ -20,7 +20,7 @@ from typing import List, Tuple, Optional, Dict
 class Qonnect:
     def __init__(self, config: dict):
         """
-        This is the main class for the game. Here the game board is set up, the physicaloperations
+        This is the main class of the game. Here the game board is set up, the physicaloperations
         are mapped to actions in the game which can be played with a mouse.
 
         Description:
