@@ -1,5 +1,5 @@
 # Qonnect
-This is *Qonnect* a simple tabular game that is played according to the rules of quantum repeater networks.
+This is *Qonnect* a simple tabular game that is played according to the rules of quantum repeater networks. The repo can be forked and run locally. The `play.py` file includes the configuration file where the user can change the input parameters. The game was made in the context of my MSc research project [QRL-RL-GNN](https://github.com/chrishalkias/QRN-RN-GNN).
 
 <div align="center">
 <img src="./assets/preview.png" alt="Description" width="300"/>
@@ -10,17 +10,17 @@ Here are some quick links to the following guide:
 
 <div align="center">
 
-[Description](#game-description)
+ⓘ [Description](#game-description)
 
-[Rules](#game-rules)
+📕 [Rules](#game-rules)
 
-[Entanglement](#entangling)
+🤝 [Entanglement](#entangling)
 
-[Swapping](#swaping)
+🔀 [Swapping](#swaping)
 
-[Bugs](#known-bugs)
+🪲 [Bugs](#known-bugs)
 
-[Instalation](#instalation)
+🚀 [Instalation](#instalation)
 </div>
 
 ## Game description
@@ -63,11 +63,5 @@ add the known bugs
 ## Instalation
 
 ```
-git clone https://github.com/chrishalkias/QRN-RL-GNN/game
+git clone https://github.com/chrishalkias/qonnect/
 ```
-
-## How to play
-
-Run the `play.py` file and specify the following tuple accoring to the desired size `n` and operation probabilities `p_e`, `p_s` and dot lifetime `tau`
-
-    n, tau, p_e, p_s = (7, 30, 1, 1)
