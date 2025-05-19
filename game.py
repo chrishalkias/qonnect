@@ -20,7 +20,7 @@ from typing import List, Tuple, Optional, Dict
 class Qonnect:
     def __init__(self, config: dict):
         """
-        This is the main class of the game. Here the game board is set up, the physicaloperations
+        This is the main class of the game. Here the game board is set up, the physical operations
         are mapped to actions in the game which can be played with a mouse.
 
         Description:
@@ -57,7 +57,7 @@ class Qonnect:
         """
 
 
-        #Initialize the game with customizable parameters                                        
+        # initialize the game with customizable parameters                                        
         self.config = {                         # Game configuration
             'grid_size': 5,                     # Size of the grid (N x N)
             'cell_size': 80,                    # Size of each cell in pixels
@@ -84,16 +84,16 @@ class Qonnect:
 
         self.action_log = []
         
-        # Update with provided config
+        # update with provided config
         self.config.update(config)
         
-        # Set target position to top-right corner (and bottom-left by symmetry)
+        # set target position to top-right corner (and bottom-left by symmetry)
         self.config['target_position'] = (0, self.config['grid_size']-1)
         
-        # Initialize pygame
+        # initialize pygame
         pygame.init()
         
-        # Calculate window size (with extra space for numbers and title)
+        # calculate window size (with extra space for numbers and title)
         window_size = (
             self.config['grid_size'] * (self.config['cell_size'] + self.config['padding']) + 
             self.config['padding'] + self.config['text_padding'] + 200,  # Added 200 for panel
@@ -101,21 +101,21 @@ class Qonnect:
             self.config['padding'] + self.config['text_padding'] + self.config['title_font_size']
         )
         
-        # Create window
+        # create window
         self.screen = pygame.display.set_mode(window_size)
         pygame.display.set_caption(self.config['window_title'])
         
-        # Initialize special cells
+        # initialize special cells
         self.initialize_special_cells()
         
-        # Game state
+        # game state
         self.grid = [[False for _ in range(self.config['grid_size'])] 
                     for _ in range(self.config['grid_size'])]
         self.dot_timers: Dict[Tuple[int, int], int] = {}  # Tracks dot lifetimes
         self.selected_cells = []
         self.game_over = False
         self.win = False
-        self.action_count = 0  # Counts player actions for decay
+        self.action_count = 0  # counts player actions for decay
 
 
     def show_rules_popup(self):
@@ -141,12 +141,12 @@ class Qonnect:
             "                       -Chris"
         ]
         
-        # Create a semi-transparent overlay
+        # create a semi transparent overlay
         overlay = pygame.Surface(self.screen.get_size(), pygame.SRCALPHA)
-        overlay.fill((0, 0, 0, 128))  # Semi-transparent black
+        overlay.fill((0, 0, 0, 128))  # Semi transparent black
         self.screen.blit(overlay, (0, 0))
         
-        # Create popup rectangle
+        # create popup rectangle
         popup_width, popup_height = 750, 650
         popup_x = (self.screen.get_width() - popup_width) // 2
         popup_y = (self.screen.get_height() - popup_height) // 2
@@ -154,11 +154,11 @@ class Qonnect:
         pygame.draw.rect(self.screen, (240, 240, 240), 
                         (popup_x, popup_y, popup_width, popup_height))
         
-        # Render rules text with each line on a new line
+        # render rules text with each line on a new line
         font = pygame.font.SysFont(None, 24)
         y_offset = popup_y + 20
         for line in rules_lines:
-            # Split very long lines (optional)
+            # split very long lines (optional)
             if len(line) > 80:
                 sublines = self._wrap_text(line, font, popup_width - 40)
                 for subline in sublines:
@@ -170,7 +170,7 @@ class Qonnect:
                 self.screen.blit(text, (popup_x + 20, y_offset))
                 y_offset += 25
         
-        # Render close button
+        # render close button
         close_rect = pygame.Rect(popup_x + popup_width - 120, popup_y + popup_height - 50, 100, 30)
         pygame.draw.rect(self.screen, (200, 0, 0), close_rect)
         close_text = font.render("Play", True, (255, 255, 255))
@@ -178,7 +178,7 @@ class Qonnect:
         
         pygame.display.flip()
         
-        # Wait for user to click close
+        # wait for user to click close
         waiting = True
         while waiting:
             for event in pygame.event.get():
@@ -211,29 +211,38 @@ class Qonnect:
     def initialize_special_cells(self):
         """Initialize the black and grey cells based on grid size"""
         size = self.config['grid_size']
-        self.config['black_cells'] = [(i, i) for i in range(size)]  # Main diagonal
+        self.config['black_cells'] = [(i, i) for i in range(size)]  # main diagonal
         self.config['grey_cells'] = []
         
-        # Secondary diagonal (i, i+1) and (i-1, i)
+        # secondary diagonal (i, i+1) and (i-1, i)
         for i in range(size):
             if i + 1 < size:
                 self.config['grey_cells'].append((i, i + 1))
             if i - 1 >= 0:
                 self.config['grey_cells'].append((i, i - 1))
         
-        # Remove duplicates and ensure they're unique
+        # remove duplicates and ensure theyre unique
         self.config['grey_cells'] = list(set(self.config['grey_cells']))
-        # Remove any grey cells that are also black cells
+        # remove any grey cells that are also black cells
         self.config['grey_cells'] = [cell for cell in self.config['grey_cells'] if cell not in self.config['black_cells']]
     
     def pos_to_grid(self, pos: Tuple[int, int]) -> Optional[Tuple[int, int]]:
-        """Convert screen position to grid coordinates"""
+        """
+        Convert screen position to grid coordinates
+
+        Args:
+            pos (tuple) : The X-Y coordinate of the cell
+
+        Returns:
+            (row, col) : The X-Y position in the grid
+        
+        """
         x, y = pos
         text_padding = self.config['text_padding']
         title_height = self.config['title_font_size']
         cell_size = self.config['cell_size'] + self.config['padding']
         
-        # Check if position is within grid bounds (excluding number and title areas)
+        # check if position is within grid bounds (excluding number and title areas)
         if (x < text_padding or y < title_height or
             x >= text_padding + self.config['grid_size'] * cell_size or 
             y >= title_height + self.config['grid_size'] * cell_size):
@@ -251,13 +260,13 @@ class Qonnect:
         text_padding = self.config['text_padding']
         title_height = self.config['title_font_size']
         
-        # Draw game title "Qonnect"
+        # draw game title
         title_font = pygame.font.SysFont(None, self.config['title_font_size'])
         title_text = title_font.render("Qonnect", True, (0, 0, 0))
         title_rect = title_text.get_rect(center=(self.screen.get_width()//2, title_height//2))
         self.screen.blit(title_text, title_rect)
         
-        # Draw row and column numbers
+        # draw row and column numbers
         font = pygame.font.SysFont(None, 24)
         for i in range(self.config['grid_size']):
             # Column numbers (top)
@@ -268,7 +277,7 @@ class Qonnect:
             )
             self.screen.blit(text, text_rect)
             
-            # Row numbers (left side)
+            # row numbers (left side)
             text = font.render(str(i+1), True, self.config['text_color'])
             text_rect = text.get_rect(
                 center=(text_padding // 2,
@@ -276,7 +285,7 @@ class Qonnect:
             )
             self.screen.blit(text, text_rect)
         
-        # Draw grid lines
+        # draw grid lines
         for i in range(self.config['grid_size'] + 1):
             # Horizontal lines
             pygame.draw.line(
@@ -286,7 +295,7 @@ class Qonnect:
                 title_height + text_padding + i * (cell_size + padding)),
                 2
             )
-            # Vertical lines
+            # vertical lines
             pygame.draw.line(
                 self.screen, self.config['grid_color'],
                 (text_padding + i * (cell_size + padding), title_height + text_padding),
@@ -295,7 +304,7 @@ class Qonnect:
                 2
             )
         
-        # Draw black cells (main diagonal)
+        # draw black cells (main diagonal)
         for row, col in self.config['black_cells']:
             pygame.draw.rect(
                 self.screen, (0, 0, 0),
@@ -306,7 +315,7 @@ class Qonnect:
                 )
             )
         
-        # Draw grey cells (secondary diagonals)
+        # draw grey cells (secondary diagonals)
         for row, col in self.config['grey_cells']:
             pygame.draw.rect(
                 self.screen, (200, 200, 200),
@@ -317,7 +326,7 @@ class Qonnect:
                 )
             )
         
-        # Draw red diagonal line (not going over the last square)
+        # draw red diagonal line (not going over the last square)
         pygame.draw.line(
             self.screen, self.config['diagonal_color'],
             (text_padding, title_height + text_padding),
@@ -328,7 +337,7 @@ class Qonnect:
             3
         )
         
-        # Highlight target positions (top-right and bottom-left)
+        # highlight target positions (top right and bottom- eft)
         target_row, target_col = self.config['target_position']
         pygame.draw.rect(
             self.screen, self.config['target_color'],
@@ -338,7 +347,7 @@ class Qonnect:
                 cell_size, cell_size
             )
         )
-        # Mirror target position
+        # mirror target position
         pygame.draw.rect(
             self.screen, self.config['target_color'],
             (
@@ -348,16 +357,16 @@ class Qonnect:
             )
         )
         
-        # Draw dots with transparency based on age
+        # draw dots with transparency based on age
         dot_radius = cell_size // 4
         for row in range(self.config['grid_size']):
             for col in range(self.config['grid_size']):
                 if (row, col) not in self.config['black_cells'] and self.grid[row][col]:
-                    # Calculate alpha based on remaining lifetime
+                    # calculate alpha based on remaining lifetime
                     remaining_life = self.dot_timers.get((row, col), self.config['dot_lifetime'])
                     alpha = max(0, 255 * remaining_life // self.config['dot_lifetime'])
                     
-                    # Create a surface with per-pixel alpha
+                    # create a surface with per pixel alpha
                     dot_surface = pygame.Surface((dot_radius*2, dot_radius*2), pygame.SRCALPHA)
                     pygame.draw.circle(
                         dot_surface, 
@@ -366,7 +375,7 @@ class Qonnect:
                         dot_radius
                     )
                     
-                    # Blit the dot surface
+                    # blit the dot surface
                     self.screen.blit(
                         dot_surface,
                         (
@@ -375,7 +384,7 @@ class Qonnect:
                         )
                     )
         
-        # Highlight selected cells (now any cell can be selected)
+        # highlight selected cells (now any cell can be selected)
         for row, col in self.selected_cells:
             pygame.draw.rect(
                 self.screen, self.config['selection_color'],
@@ -387,7 +396,7 @@ class Qonnect:
                 self.config['selection_thickness']
             )
         
-        # Display game over message
+        # display game over message
         if self.game_over:
             font = pygame.font.SysFont(None, 50)
             if self.win:
@@ -407,22 +416,30 @@ class Qonnect:
         """Check if a position is valid (not black)"""
         return (row, col) not in self.config['black_cells']
     
-    def place_dot_with_symmetry(self, row: int, col: int):
-        """Place a dot at the specified position and its mirror image with probability"""
+    def place_dot_with_symmetry(self, row: int, col: int) -> bool:
+        """
+        Place a dot at the specified position (entanglement) and its mirror image with probability p_e
+        
+        Args:
+            row, col (int, int) : The specified link position
+        
+        Returns:
+            True if they are nearset neighbours and False if not
+        """
         if self.is_valid_placement_position(row, col) and not self.grid[row][col]:
             self.age_dots()
-            # Probabilistic dot creation
+            # probabilistic dot creation (entanglement)
             if random.random() < self.config['dot_creation_prob']:
                 self.grid[row][col] = True
                 self.dot_timers[(row, col)] = self.config['dot_lifetime']
                 
-                # Place mirror dot
+                # place mirror dot
                 mirror_row, mirror_col = col, row
-                if mirror_row != mirror_col:  # Don't mirror on diagonal (those are black anyway)
+                if mirror_row != mirror_col:  # dont mirror on diagonal (those are black anyway)
                     self.grid[mirror_row][mirror_col] = True
                     self.dot_timers[(mirror_row, mirror_col)] = self.config['dot_lifetime']
                 
-                # Age all existing dots
+                # age all existing dots
                 self.log_action(f"Entangle ({row+1},{col+1})")
                 self.check_win_condition()
                 return True
@@ -432,18 +449,27 @@ class Qonnect:
         """Check if two dots can be merged (not mirrors of each other)"""
         row1, col1 = pos1
         row2, col2 = pos2
-        return not (row1 == col2 and col1 == row2)  # Not mirror positions
+        return not (row1 == col2 and col1 == row2)  # not mirror positions
     
     def merge_dots_with_symmetry(self, pos1: Tuple[int, int], pos2: Tuple[int, int]):
-        """Merge two dots if they exist according to matrix multiplication rules"""
+        """
+        Merge two dots (swap) if they exist according to matrix multiplication rules
+
+        Args:
+            pos1 (tuple) : The first link (i,j)
+            pos2 (tuple) : The second link (j,k)
+
+        Returns:
+            Creates the resulting link (i,k)
+        """
         row1, col1 = pos1
         row2, col2 = pos2
         
-        # Check if these are mirror positions (can't merge)
+        # check if these are mirror positions (cant merge)
         if not self.can_merge(pos1, pos2):
             return
         
-        # Check if both positions have dots
+        # check if both positions have dots
         if self.grid[row1][col1] and self.grid[row2][col2]:
             self.age_dots()
             if random.random() < self.config['dot_merge_prob']:
@@ -452,7 +478,7 @@ class Qonnect:
                 lifetime2 = self.dot_timers.get((row2, col2), self.config['dot_merge_prob'])
                 average_lifetime = (lifetime1 + lifetime2) // 2
                 
-                # Determine valid merge combinations (row or column matches)
+                # determine valid merge combinations (row or column matches)
                 new_row, new_col = -1, -1
                 if col1 == row2:  # (i,j) and (j,k) → (i,k)
                     new_row, new_col = row1, col2
@@ -463,12 +489,12 @@ class Qonnect:
                 elif row1 == col2:  # (i,j) and (k,i) → (j,k)
                     new_row, new_col = col1, row2
                 
-                if new_row != -1 and new_col != -1:  # If valid merge combination found
-                    # Remove original dots and their mirrors
+                if new_row != -1 and new_col != -1:  # rf valid merge combination found
+                    # remove original dots and their mirrors
                     self.remove_dot(row1, col1)
                     self.remove_dot(row2, col2)
                     
-                    # Check if target position is valid
+                    # check if target position is valid
                     if self.is_valid_position(new_row, new_col):
                         # Place new dot and its mirror with average lifetime
                         self.grid[new_row][new_col] = True
@@ -481,15 +507,16 @@ class Qonnect:
                         
                         self.log_action(f"Swap ({row1+1},{col1+1}) and ({row2+1},{col2+1})")
                         self.check_win_condition()
+
     def remove_dot(self, row: int, col: int):
         """Remove a dot and its mirror image"""
         self.grid[row][col] = False
         if (row, col) in self.dot_timers:
             del self.dot_timers[(row, col)]
         
-        # Remove mirror dot
+        # remove mirror dot
         mirror_row, mirror_col = col, row
-        if mirror_row != mirror_col:  # Don't mirror on diagonal
+        if mirror_row != mirror_col:  # Ddont mirror on diagonal
             self.grid[mirror_row][mirror_col] = False
             if (mirror_row, mirror_col) in self.dot_timers:
                 del self.dot_timers[(mirror_row, mirror_col)]
@@ -499,13 +526,13 @@ class Qonnect:
         self.action_count += 1
         dots_to_remove = []
         
-        # Update timers and mark expired dots
+        # update timers and mark expired dots
         for pos in list(self.dot_timers.keys()):
             self.dot_timers[pos] -= 1
             if self.dot_timers[pos] <= 0:
                 dots_to_remove.append(pos)
         
-        # Remove expired dots
+        # remove expired dots
         for row, col in dots_to_remove:
             self.remove_dot(row, col)
     
@@ -527,24 +554,24 @@ class Qonnect:
         
         row, col = grid_pos
         
-        # Don't allow interaction with black cells
+        # dont allow interaction with black cells
         if (row, col) in self.config['black_cells']:
             return
         
         if not self.config['merge_enabled']:
             self.place_dot_with_symmetry(row, col)
         else:
-            # In merge mode, first try to place a dot if cell is empty and valid
+            # in merge mode, first try to place a dot if cell is empty and valid
             if self.is_valid_placement_position(row, col) and not self.grid[row][col]:
                 if self.place_dot_with_symmetry(row, col):
                     return  # Successfully placed a dot
             
-            # If cell has a dot or couldn't place one, proceed with selection
-            # Now any non-black cell can be selected for merging
+            # if cell has a dot or couldn't place one, proceed with selection
+            # now any non-black cell can be selected for merging
             if (row, col) in self.selected_cells:
                 self.selected_cells.remove((row, col))
             elif self.is_valid_position(row, col):
-                # Check if this selection would pair with a mirror of an already selected dot
+                # check if this selection would pair with a mirror of an already selected dot
                 if len(self.selected_cells) == 1:
                     selected_row, selected_col = self.selected_cells[0]
                     if (row == selected_col and col == selected_row):
@@ -561,18 +588,18 @@ class Qonnect:
         panel_width = 200
         panel_x = self.screen.get_width() - panel_width
         
-        # Draw panel background
+        # draw panel background
         pygame.draw.rect(
             self.screen, (220, 220, 220),
             (panel_x, 0, panel_width, self.screen.get_height())
         )
         
-        # Draw title
+        # draw title
         font = pygame.font.SysFont(None, 24)
         title = font.render("Game Settings:", True, (0, 0, 0))
         self.screen.blit(title, (panel_x + 10, 10))
         
-        # Draw current parameters
+        # draw current parameters
         params = [
             f"Creation Prob: {self.config['dot_creation_prob']}",
             f"Swap Prob: {self.config['dot_merge_prob']}",
@@ -584,17 +611,17 @@ class Qonnect:
             text = font.render(param, True, (0, 0, 0))
             self.screen.blit(text, (panel_x + 10, 50 + i * 30))
         
-        # Draw action log title
+        # draw action log title
         log_title = font.render("Action Log:", True, (0, 0, 0))
         self.screen.blit(log_title, (panel_x + 10, 180))
         
-        # Draw last 10 actions (you'll need to maintain this list)
+        # draw last 10 actions (you ll need to maintain this list)
         if hasattr(self, 'action_log'):
-            for i, action in enumerate(self.action_log[-2*self.config['grid_size']:]):  # Show last 10 actions
+            for i, action in enumerate(self.action_log[-2*self.config['grid_size']:]):  # show last 10 actions
                 text = font.render(action, True, (0, 0, 0))
                 self.screen.blit(text, (panel_x + 10, 200 + i * 20))
 
-    def log_action(self, action: str):
+    def log_action(self, action: str) -> None:
         """Add an action to the log"""
         if not hasattr(self, 'action_log'):
             self.action_log = []
@@ -609,10 +636,10 @@ class Qonnect:
                     pygame.quit()
                     sys.exit()
                 elif event.type == pygame.MOUSEBUTTONDOWN:
-                    if event.button == 1:  # Left click
+                    if event.button == 1:  # left click
                         self.handle_click(event.pos)
                 elif event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_r:  # Reset game
+                    if event.key == pygame.K_r:  # reset game
                         self.__init__(self.config)
             
             self.draw_grid()
