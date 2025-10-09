@@ -44,7 +44,6 @@ class Qonnect:
             pos_to_grid                 > Translate screen to grid positions
             draw_grid                   > Draw the grid and links
             is_valid_placement_position > Check if EG is on nearest neighbour (grey square)
-            is_valid_position           > Forbids self loops (i,i) placements
             place_dot_with_symmetry     > Perform EG on both mirror images
             merge_dots_with_symmetry    > Perform SWAP on both mirror images
             remove_dot                  > Removes a link after swapping
@@ -202,7 +201,7 @@ class Qonnect:
             else:
                 lines.append(' '.join(current_line))
                 current_line = [word]
-        
+                
         if current_line:
             lines.append(' '.join(current_line))
         
@@ -412,10 +411,6 @@ class Qonnect:
         """Check if a position is valid for placing dots (grey cells only)"""
         return (row, col) in self.config['grey_cells']
     
-    def is_valid_position(self, row: int, col: int) -> bool:
-        """Check if a position is valid (not black)"""
-        return (row, col) not in self.config['black_cells']
-    
     def place_dot_with_symmetry(self, row: int, col: int) -> bool:
         """
         Place a dot at the specified position (entanglement) and its mirror image with probability p_e
@@ -495,7 +490,7 @@ class Qonnect:
                     self.remove_dot(row2, col2)
                     
                     # check if target position is valid
-                    if self.is_valid_position(new_row, new_col):
+                    if (new_row, new_col) not in self.config['black_cells']:
                         # Place new dot and its mirror with average lifetime
                         self.grid[new_row][new_col] = True
                         self.dot_timers[(new_row, new_col)] = average_lifetime
@@ -570,7 +565,7 @@ class Qonnect:
             # now any non-black cell can be selected for merging
             if (row, col) in self.selected_cells:
                 self.selected_cells.remove((row, col))
-            elif self.is_valid_position(row, col):
+            elif (row, col) not in self.config['black_cells']:
                 # check if this selection would pair with a mirror of an already selected dot
                 if len(self.selected_cells) == 1:
                     selected_row, selected_col = self.selected_cells[0]
