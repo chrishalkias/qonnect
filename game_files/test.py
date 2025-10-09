@@ -14,7 +14,7 @@ class TestQonnectGame(unittest.TestCase):
         pygame.display.set_mode = Mock(return_value=Mock())
         
         self.config = {
-            'grid_size': 5,
+             'grid_size': 5,
             'cell_size': 80,
             'padding': 1,
             'bg_color': (240, 240, 240),
