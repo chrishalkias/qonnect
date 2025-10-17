@@ -1,4 +1,10 @@
 # Qonnect
+<div align = "center">
+
+<img src="https://www.pygame.org/docs/_static/pygame_powered.svg" alt="Pygame logo" style="vertical-align:middle; height:200px; margin-right:8px;">
+</div>
+
+
 This is *Qonnect* a simple tabular game that is played according to the rules of quantum repeater networks. The repo can be forked and run locally. The `play.py` file includes the configuration file where the user can change the input parameters. The game was made in the context of my MSc research project [QRL-RL-GNN](https://github.com/chrishalkias/QRN-RL-GNN).
 
 <div align="center">
@@ -8,20 +14,19 @@ This is *Qonnect* a simple tabular game that is played according to the rules of
 # Quick links
 Here are some quick links to the following guide:
 
-<div align="center">
 
-ⓘ [Description](#game-description)
+- ⓘ [Description](#game-description)
 
-📕 [Rules](#game-rules)
+- 📕 [Rules](#game-rules)
 
-🤝 [Entanglement](#entangling)
+- 🤝 [Entanglement](#entangling)
 
-🔀 [Swapping](#swaping)
+- 🔀 [Swapping](#swaping)
 
-🪲 [Bugs](#known-bugs)
+- 🪲 [Bugs](#known-bugs)
 
-🚀 [Instalation](#instalation)
-</div>
+- 🚀 [Instalation](#instalation)
+
 
 ## Game description
 The game consists of an $N$ by $N$ grid in which dots live, the goal of the game is to move a dot to one of the edges of the grid. The grid cells correspond to edges in an underlying graph description (more of that in [physical description](#phys-des))
