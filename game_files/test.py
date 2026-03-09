@@ -449,7 +449,7 @@ def run_game_tests():
     suite.addTests(loader.loadTestsFromTestCase(TestQonnectIntegration))
     suite.addTests(loader.loadTestsFromTestCase(TestQonnectEdgeCases))
     
-    runner = unittest.TextTestRunner(verbosity=2)
+    runner = unittest.TextTestRunner(verbosity=1)
     result = runner.run(suite)
     
     # Print summary
@@ -463,9 +463,9 @@ def run_game_tests():
     print(f"{'='*60}")
     
     if result.wasSuccessful():
-        print("🎮 All game tests passed! The Qonnect game is working correctly.")
+        print("🎮 All game tests passed!")
     else:
-        print("❌ Some game tests failed. Check the output above for details.")
+        print("❌ Some game tests failed..")
     
     return result.wasSuccessful()
 
