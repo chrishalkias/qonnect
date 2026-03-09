@@ -48,7 +48,9 @@ $$S\left( \rho_{ij}, \rho_{jk} \right) = \rho_{i,j}$$
 where $\rho_{ik}$ is again a maximally entangled pair of qubits.
 
 ## Game rules
+
 The game has two permissible kinds of operations corresponding to entanglement generation and entanglement swaping
+
 ### Entangling:
 You can entangle two repeaters if they are adjecent to each other, this would make their corresponding square grey. by clicking on the square one dot is placed there. For a quantum repeater chain the first off diagonal corresponds to the permissible entanglement generation squares, this is because the system is assumed to be a repeater chain. So for a given row or column $i$ the only permissible dot placement positions are
     $$(i,i+1)$$
