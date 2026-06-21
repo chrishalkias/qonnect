@@ -2,3 +2,8 @@
 .venv/
 venv/
 
+# Manim animation environment and render intermediates
+animations/.venv/
+animations/media/
+animations/__pycache__/
+animations/tests/__pycache__/

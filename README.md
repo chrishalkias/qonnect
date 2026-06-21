@@ -8,7 +8,7 @@
 This is *Qonnect* a simple tabular game that is played according to the rules of quantum repeater networks. The repo can be forked and run locally. The `play.py` file includes the configuration file where the user can change the input parameters. The game was made in the context of my MSc research project [QRL-RL-GNN](https://github.com/chrishalkias/QRN-RL-GNN).
 
 <div align="center">
-<img src="./assets/preview.gif" alt="Description" width="400"/>
+<img src="./assets/qonnect-repeater-explainer.gif" alt="Animated guide to Qonnect quantum repeater networking" width="800"/>
 </div>
 
 # Quick links
